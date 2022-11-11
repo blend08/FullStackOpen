@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const Header = ({title}) => <h1>{title}</h1>
 
-const StatisticsLine = ({text , value}) => <div> {text} {value} </div>
+const StatisticsLine = ({text , value}) => <tr><td>{text}</td><td>{value}</td></tr>
 
 const Statistics = (props) => {
   const {good, neutral, bad} = props
@@ -13,14 +13,16 @@ const Statistics = (props) => {
   if (all === 0) return <div>No feedback given</div> 
 
   return(
-    <>
-      <StatisticsLine text="good" value={good}/>
-      <StatisticsLine text="neutral" value={neutral}/>
-      <StatisticsLine text="bad" value={bad}/>
-      <StatisticsLine text="all" value={all}/>
-      <StatisticsLine text="average" value={average} />
-      <StatisticsLine text="positive" value={positive + '%'} />
-    </>
+    <table>
+      <tbody>
+        <StatisticsLine text="good" value={good}/>
+        <StatisticsLine text="neutral" value={neutral}/>
+        <StatisticsLine text="bad" value={bad}/>
+        <StatisticsLine text="all" value={all}/>
+        <StatisticsLine text="average" value={average} />
+        <StatisticsLine text="positive" value={positive + '%'} />
+      </tbody>
+    </table>
   )
 
 }
@@ -36,6 +38,10 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+
+  // if event handler is to use function that returns a function
+  // const setToGood = (newValue) => setGood(newValue)
+  // <Button handleClick={setToGood(good+1)} text="good" />
 
   return (
     <div>
