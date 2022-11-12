@@ -12,14 +12,31 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+
+  // new Uint8Array/Uint16Array/Uint32Array values are zeroes by default
+  // another solution would be Array(n).fiil(0)
+  const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
+  
+  const vote = (select) => () => {
+    const copy = [...votes]
+    copy[select] += 1
+    setVotes(copy)
+  }
+
   const getRandomInt = (max) => Math.floor(Math.random() * max)
 
+  const setToSelected = (max) => () => setSelected(getRandomInt(max))
+  
   return (
     <div>
       <div>
         {anecdotes[selected]}
       </div>
-      <button onClick={() => setSelected(getRandomInt(6))}>next anecdote</button>
+      <div>
+        has {votes[selected]} points
+      </div>
+      <button onClick={vote(selected)}>Vote</button>
+      <button onClick={setToSelected(anecdotes.length)}>next anecdote</button>
     </div>
   )
 }
