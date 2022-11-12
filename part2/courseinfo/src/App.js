@@ -10,11 +10,14 @@ const Content = ({parts}) => {
 
 const Header = ({title}) => <h1>{title}</h1>
 
+const Total = ({parts}) => <b>total of {parts.reduce((acc, part) => acc+part.exercises, 0)} exercises</b>
+
 const Course = ({course}) =>{
   return (
     <>
       <Header title={course.name} />
       <Content parts={course.parts}/>
+      <Total parts={course.parts} />
     </>
   )
 }
