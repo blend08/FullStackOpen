@@ -1,5 +1,18 @@
 import { useState } from 'react'
 
+const Header = ({title}) => <h1>{title}</h1>
+
+const Anecdote = ({anecdote, votes}) => {
+  return (
+    <>
+      <div>{anecdote}</div>
+      <div>has {votes} votes</div>
+    </>
+  )
+}
+
+const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -14,8 +27,10 @@ const App = () => {
   const [selected, setSelected] = useState(0)
 
   // new Uint8Array/Uint16Array/Uint32Array values are zeroes by default
-  // another solution would be Array(n).fiil(0)
+  // another solution would be Array(n).fill(0) 
   const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
+  const maxVote = Math.max(...votes)
+  const indexOfMaxVote = votes.indexOf(maxVote)
   
   const vote = (select) => () => {
     const copy = [...votes]
@@ -29,14 +44,12 @@ const App = () => {
   
   return (
     <div>
-      <div>
-        {anecdotes[selected]}
-      </div>
-      <div>
-        has {votes[selected]} points
-      </div>
-      <button onClick={vote(selected)}>Vote</button>
-      <button onClick={setToSelected(anecdotes.length)}>next anecdote</button>
+      <Header title="Anecdote of the day" /> 
+      <Anecdote anecdote={anecdotes[selected]} votes={votes[selected]} />
+      <Button onClick={vote(selected)} text="vote" />
+      <Button onClick={setToSelected(anecdotes.length)} text="next anecdote" />
+      <Header title="Anecdote with most votes" />
+      <Anecdote anecdote={anecdotes[indexOfMaxVote]} votes={votes[indexOfMaxVote]} />
     </div>
   )
 }
