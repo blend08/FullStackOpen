@@ -45,6 +45,17 @@ const App = () => {
       }
   }
 
+  const removeName = (id, name) => {
+    if (window.confirm(`Delete ${name}`))
+    {
+      personService
+      .remove(id)
+      .then(returnedPerson => {
+        setPersons(persons.filter(person => person.id !== id))
+      })
+    }
+  }
+
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -67,7 +78,7 @@ const App = () => {
                   onSubmit={addName}
       />
       <Header title="Numbers" />
-      <Persons persons={filteredPersons}/>
+      <Persons persons={filteredPersons} removeName={removeName}/>
     </div>
   )
 }
