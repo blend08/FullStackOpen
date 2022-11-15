@@ -4,6 +4,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Header from './components/Header'
+import personService from './services/persons'
 
 const App = () => {
   //{ name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -16,7 +17,13 @@ const App = () => {
   const [newfilter, setNewFilter] = useState('')
   const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(newfilter.toLowerCase()))
 
-  useEffect(() => {axios.get("http://localhost:3001/persons").then(response => setPersons(response.data))},[])
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
+  }, [])
  
   const addName = (event) => {
     event.preventDefault()
@@ -28,15 +35,14 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
     else
       {
-        axios
-          .post('http://localhost:3001/persons', personObject)
-          .then(response => {
-            setPersons(persons.concat(personObject))
+        personService
+          .create(personObject)
+          .then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
             setNewName('')
             setNewNumber('')
           })
       }
-      
   }
 
   const handleNameChange = (event) => {
