@@ -75,6 +75,13 @@ const App = () => {
       .then(returnedPerson => {
         setPersons(persons.filter(person => person.id !== id))
       })
+      .catch(error => {
+        setNotification(`Person ${name} was already deleted`)
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+        setPersons(persons.filter(person => person.id !== id))
+      })
     }
   }
 
