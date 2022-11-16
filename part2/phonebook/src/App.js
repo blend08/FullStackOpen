@@ -5,6 +5,7 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Header from './components/Header'
 import personService from './services/persons'
+import Notification from './components/Notifcation'
 
 const App = () => {
   //{ name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -15,6 +16,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newfilter, setNewFilter] = useState('')
+  const [newNotification, setNotification] = useState()
   const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(newfilter.toLowerCase()))
 
   useEffect(() => {
@@ -42,6 +44,10 @@ const App = () => {
           .update(changedPerson.id, changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.name !== newName ? person : returnedPerson))
+            setNotification(`Changed ${returnedPerson.name} 's number to ${returnedPerson.number}`)
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
           })
       }
     }
@@ -53,6 +59,10 @@ const App = () => {
             setPersons(persons.concat(returnedPerson))
             setNewName('')
             setNewNumber('')
+            setNotification(`Added ${returnedPerson.name}`)
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
           })
       }
   }
@@ -85,6 +95,7 @@ const App = () => {
   return (
     <div>
       <Header title="Phonebook" />
+      <Notification message={newNotification} />
       <Filter value={newfilter} onChange={handleNameFilter} />
       <Header title="Add a new" />
       <PersonForm nameValue={newName} nameOnChange={handleNameChange}
