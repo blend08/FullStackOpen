@@ -16,7 +16,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newfilter, setNewFilter] = useState('')
-  const [newNotification, setNotification] = useState()
+  const [notification, setNotification] = useState(null)
   const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(newfilter.toLowerCase()))
 
   useEffect(() => {
@@ -26,6 +26,13 @@ const App = () => {
         setPersons(initialPersons)
       })
   }, [])
+
+  const notify = (message, type='info') => {
+    setNotification({message, type})
+    setTimeout(() => {
+      setNotification(null)
+    }, 3000)
+  }
  
   const addName = (event) => {
     event.preventDefault()
@@ -33,6 +40,10 @@ const App = () => {
       name: newName,
       number: newNumber
     }
+
+    setNewName('')
+    setNewNumber('')
+
     if(persons.some(person => person.name === newName))
     {
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`))
@@ -44,10 +55,10 @@ const App = () => {
           .update(changedPerson.id, changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.name !== newName ? person : returnedPerson))
-            setNotification(`Changed ${returnedPerson.name} 's number to ${returnedPerson.number}`)
-            setTimeout(() => {
-              setNotification(null)
-            }, 5000)
+            notify(`Changed ${returnedPerson.name} 's number to ${returnedPerson.number}`)
+          })
+          .catch(error => {
+            notify(error.response.data.error, 'alert')
           })
       }
     }
@@ -57,12 +68,10 @@ const App = () => {
           .create(personObject)
           .then(returnedPerson => {
             setPersons(persons.concat(returnedPerson))
-            setNewName('')
-            setNewNumber('')
-            setNotification(`Added ${returnedPerson.name}`)
-            setTimeout(() => {
-              setNotification(null)
-            }, 5000)
+            notify(`Added ${returnedPerson.name}`)
+          })
+          .catch(error =>{
+            notify(error.response.data.error, 'alert')
           })
       }
   }
@@ -74,12 +83,10 @@ const App = () => {
       .remove(id)
       .then(returnedPerson => {
         setPersons(persons.filter(person => person.id !== id))
+        notify(`Person ${name} deleted`)
       })
       .catch(error => {
-        setNotification(`Person ${name} was already deleted`)
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
+        notify(`Person ${name} was already deleted`, 'alert')
         setPersons(persons.filter(person => person.id !== id))
       })
     }
@@ -102,7 +109,7 @@ const App = () => {
   return (
     <div>
       <Header title="Phonebook" />
-      <Notification message={newNotification} />
+      <Notification notification={notification} />
       <Filter value={newfilter} onChange={handleNameFilter} />
       <Header title="Add a new" />
       <PersonForm nameValue={newName} nameOnChange={handleNameChange}

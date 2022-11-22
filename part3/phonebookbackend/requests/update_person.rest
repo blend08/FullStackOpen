@@ -2,19 +2,19 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "Sherlock Holmes",
-    "number": "12-32-4216534"
+    "name": "Sherlock test",
+    "number": "12-32-23432434"
 }
 
 ###
 # Update Person
 
-@id = 637c8756f25fe1bdf9dbe082
+@id = 637cac49ff4563727b540a72
 
 PUT http://localhost:3001/api/persons/{{id}}
 Content-Type: application/json
 
 {
-    "name": "Sherlock Holmes",
+    "name": "sa",
     "number": "12-34-567891"
 }
