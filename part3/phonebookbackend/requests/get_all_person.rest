@@ -8,3 +8,8 @@ GET http://localhost:3001/api/persons/637b7ce7f4d9e07f450216e9
 
 # dosent exist
 GET http://localhost:3001/api/persons/5c41c90e84d891c15dfa3431 
+
+###
+
+# malformatted string
+GET http://localhost:3001/api/persons/1 
