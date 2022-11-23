@@ -62,7 +62,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response, next) => {
+app.post('/api/persons', (request, response, next) => {    
     const body = request.body
 
     const person = new Person({
@@ -108,9 +108,9 @@ const errorHandler = (error, request, response, next) => {
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({error: error.message})
     } 
-    // else {
-    //     return response.status(500).end()
-    // }
+    else {
+        return response.status(500).end()
+    }
 
     next(error)
 }

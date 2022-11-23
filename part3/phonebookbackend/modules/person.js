@@ -12,15 +12,28 @@ mongoose
         console.log('error connecting to MongoDb:', error.message)
     })
 
+
 const personSchema = new mongoose.Schema({
     name: {
         type: String,
         minLength: 3,
-        required: true
+        required: true,
+        validate: {
+            validator: async function(name) {
+                const existing = await mongoose.model('Person').findOne({ name : this.name });
+                return existing ? false : true
+              },
+            message: props => `${props.value} is already in the phonebook`
+        }  
     },
     number: {
         type: String,
-        required: true
+        minLength: 8,
+        required: true,
+        validate: {
+            validator: (v) => /^\d{2,3}-\d{1,}$/.test(v),
+            message: props => `${props.value} is not a valid phone number`
+        }
     }
 })
 
